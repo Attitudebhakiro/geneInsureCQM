@@ -1,0 +1,173 @@
+<app-nav></app-nav>
+<br>
+<br>
+<!-- ======= CQM FORM ======= -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-title">
+                <span>AGENT</span>
+                <h2>AGENT</h2>
+
+            </div>
+            
+        </div>
+        <div class="container p-5">
+           
+            <div  class="row ">
+                <div *ngIf="AgentSavedSucceed" class="col-md-6 offset-3">
+                   
+                    <a class="btn btn-success justify-content-center d-flex">Agent Information Saved. Go down for monitering Questions</a> 
+                </div>
+            </div>
+            <div *ngIf="AgentSaveFaild" class="row ">
+                <div class="col-md-6 offset-3">
+                    <a class="btn btn-danger justify-content-arround">Failed To Save Agent</a> 
+                   
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+          
+
+            <form [formGroup]="agentForm" (submit)="saveAgent()" ngNativeValidate role="form" class="php-email-form">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <input type="text" formControlName="name" class="form-control" id="name" placeholder="Agent Name" minlenght="4" maxlength="20" required>
+                    </div>
+                    <div class="col-md-6 form-group mt-3 mt-md-0">
+                        <input type="text" class="form-control" formControlName="supervisor" id="ssupervisor" placeholder="Supervisor Name" minlenght="4" maxlength="20" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <input type="text" formControlName="callref" class="form-control" id="callref" placeholder="Call Reference" minlenght="4" maxlength="20" required>
+                    </div>
+                    <div class="col-md-6 form-group mt-3 mt-md-0">
+                        <input type="date" class="form-control" formControlName="rdate" id="rdate" placeholder="Date" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <input type="text" formControlName="callrecordingRef" class="form-control" id="callrecordingRef" placeholder="Call Recording Reference" minlenght="4" maxlength="20" required>
+                    </div>
+                    <div class="col-md-6 form-group mt-3 mt-md-0">
+                        <input type="number" class="form-control" formControlName="customernumber" id="customernumber" placeholder="Customer Number" minlenght="9" maxlength="10" required>
+                    </div>
+                </div>
+              
+                <div class="my-3">
+                  
+                    <div class="error-message"></div>
+                   
+                </div>
+                <div class="text-center"><button type="submit">Save Agent</button></div>
+            </form>
+
+        </div>
+    </section>
+    <!-- End CQM FORM -->
+       <!-- ======= QSNS Section ======= -->
+       <section id="about" class="about">
+        <div class="container d-flex justify-content-center">
+
+            <div class="row content ">
+                <div class="col-lg-12 ">
+                    <h2 class="text-info d-flex justify-content-center">Monitering Questions</h2>
+                    <div class="d-flex m-5">
+                        <h3 class="text-info d-flex justify-text-center">Monitering Hint</h3>
+                        <div class="btn-group mx-5 d-flex justify-content-center" role="group" aria-label="Basic outlined example">
+                            <button type="button" class="btn btn-outline-success">1 : YES</button>
+                            <button type="button" class="btn btn-outline-info">2 : NO</button>
+                            <button type="button" class="btn btn-outline-info">3 : N/A</button>
+                        </div>
+                    </div>
+                    <h3 class="d-flex justify-content-center">Monitering Questions For :  <span class="text-success px-5">{{ agentForm.value.name }}</span></h3>                   
+                    
+                </div>
+                <div class="col-lg-12 pt-4 pt-lg-0 ">
+                    
+             
+                    <hr>
+                    <div  class="container">
+                        <div *ngIf="prevAnswered.length < 11">
+                                <p class="text-center">{{ prevAnswered.length }} of {{ questions.length }}</p>
+                                <h1>{{ questions[currentQsn].question }}</h1>
+                        
+                            <div class="answers" >
+                            <ul class="answers__list" *ngFor="let qsn of questions[currentQsn].answer" >
+                                <label class="btn btn-outline-info form-check-label ">
+                                    <input  type="radio" class="form-check-input" name="options" (change)="onAnswer(qsn.userAnswer, qsn.score)" [disabled]="answerSelected">
+                                    {{ qsn.userAnswer }}
+                                </label>
+                                
+                            </ul>
+                            </div>
+                            
+                           
+                                
+                        </div>
+                     </div>
+                     <button  *ngIf="prevAnswered.length > 9" (click)="ViewResults()" class="btn btn-outline-info">View Results</button>
+                     <hr> 
+                </div>
+                 <div *ngIf="viewResults" class="container">
+     
+                            <div class="row justify-content-center">
+                                <div class="col-lg-6">
+                                <h4 class="text-bold text-primary">Monitering Results For : <span class="text-success">{{ agentForm.value.name }}</span></h4>
+                                </div>
+                            </div>
+                            <br>
+                      
+                                <table #dataTable ng-if="MResults"  class="display" cellspacing="4" width="100%">
+                                    <thead class="text-info">
+                                        <tr>
+                                        <th>Question</th>
+                                        <th>Answer</th>
+                                        <th>Score</th>
+                                        <th>Max Score</th>
+                                        <th>Agent Name</th>
+                                    </tr>
+                                    </thead>
+                                
+                                    <tbody  >
+                                        <tr *ngFor = "let results of MoniteringResults">
+                                        
+                                        <td >{{ results.qsn }}</td>
+                                        <td>{{ results.answer }}</td>
+                                        <td>{{ results.score }}</td>
+                                        <td>{{ results.maxScore }}</td>
+                                        <td>{{ results.agentName }}</td>
+                    
+                                        </tr>    
+                                                                
+                                        </tbody>
+                                    </table>
+                                </div>                   
+                            
+                            </div>
+                       
+
+                </div>
+            </section>
+
+  
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
